@@ -1,12 +1,17 @@
-function testApi(name, callback) {
-    var oReq = new XMLHttpRequest()
-    oReq.addEventListener("load", function () {
-      const response = JSON.parse(this.responseText)
-      callback(response)
+export function getPackageJSON(packageName, callback, errorCallback) {
+    const url = '/api/' + packageName
+  
+    const request = new XMLHttpRequest()
+    request.open('GET', url)
+    request.addEventListener('load', function (event) {
+      const data = JSON.parse(request.responseText)
+      if (request.status === 200) {
+        callback(data)
+      } else if (errorCallback) {
+        errorCallback(data)
+      }
     })
-   
-    oReq.open("GET", "/api/" + name)
-    oReq.send();
-   }
-   
-   testApi("react", data => console.log(data))
+  
+    request.send()
+  }
+  
